@@ -76,82 +76,28 @@ def main():
             except Exception:
                 pass
 
-        FEATURE_DEFAULTS = {
-
-    "heart": {
-    "age": 53,
-    "gender": 1,
-    "height": 165,
-    "weight": 72,
-    "systolic": 120,
-    "diastolic": 80,
-    "cholesterol": 1,
-    "glucose": 1,
-    "ldl": 100,
-    "smoke": 0,
-    "alcohol": 0,
-    "active": 1
-    },
-
-    "diabetes": {
-        "high_bp": 0,
-        "high_chol": 0,
-        "chol_check": 1,
-        "stroke": 0,
-        "heart_disease_or_attack": 0,
-        "phys_activity": 1,
-        "fruits": 1,
-        "veggies": 1,
-        "any_healthcare": 1,
-        "no_doc_bc_cost": 0,
-        "gen_hlth": 2,
-        "ment_hlth": 0,
-        "phys_hlth": 0,
-        "diff_walk": 0,
-        "sex": 1,
-        "age": 50,
-        "education": 5,
-        "income": 6,
-        "hvy_alcohol_consump": 0,
-        "systolic": 120,       # ← أضف
-        "diastolic": 80,       # ← أضف
-        "ldl": 100,            # ← أضف
-        "glucose": 100         # ← أضف
-    },
-
-    "bp": {
-        "age": 55,
-        "salt_intake": 3,
-        "stress_score": 4,
-        "bp_history": 0,
-        "sleep_duration": 7,
-        "family_history": 0,
-        "exercise_level": 1,
-        "smoking_status": 0,
-        "systolic": 120,       # ← أضف
-        "diastolic": 80,       # ← أضف
-        "ldl": 100,            # ← أضف
-        "glucose": 100         # ← أضف
-
-    },
-
-    "kidney": {
-        "age": 52,
-        "creatinine_level": 1.15,
-        "bun": 17.5,
-        "diabetes": 0,
-        "hypertension": 0,
-        "gfr": 82.0,
-        "urine_output": 1.6,
-        "systolic": 120,       # ← أضف
-    "diastolic": 80,       # ← أضف
-    "ldl": 100,            # ← أضف
-    "glucose": 100         # ← أضف
-    }
-
-}
-        defaults = FEATURE_DEFAULTS.get(model_type, FEATURE_DEFAULTS["heart"])
         
+        with open("heart_defaults.json") as f:
+                heart_defaults = json.load(f)
+        
+        with open("kidney_defaults.json") as f:
+                kidney_defaults = json.load(f)
+        with open("bp_defaults.json") as f:
+                bp_defaults = json.load(f)
+
+        with open("diabetes_defaults.json") as f:
+                diabetes_defaults = json.load(f)
+
+        FEATURE_DEFAULTS = {
+            "heart":    heart_defaults,
+            "kidney":   kidney_defaults,
+            "bp":       bp_defaults,
+            "diabetes": diabetes_defaults
+            }
+            
+
+        defaults = FEATURE_DEFAULTS.get(model_type, FEATURE_DEFAULTS["heart"])
+
         profile = input_data.get("profile", {})
         metrics = input_data.get("metrics", {})
 
@@ -203,17 +149,17 @@ def main():
 
         # ── HEART ──────────────────────────────────────────────────────────────
         if model_type == "heart":
-            age_val      = float(metrics.get("age",      age))
-            gender_val   = float(metrics.get("gender",   gender))
-            height_val   = float(metrics.get("height",   height))
-            weight_val   = float(metrics.get("weight",   weight))
-            systolic_val = float(metrics.get("systolic", systolic))
-            diastolic_val= float(metrics.get("diastolic",diastolic))
-            chol_val     = float(metrics.get("cholesterol", cholesterol))
-            gluc_val2    = float(metrics.get("glucose",  glucose))
-            smoke_val    = float(metrics.get("smoke",    smoke))
-            alc_val      = float(metrics.get("alcohol",  alcohol))
-            act_val      = float(metrics.get("active",   active))
+            age_val       = float(metrics.get("age",         age))
+            gender_val    = float(metrics.get("gender",      gender))
+            height_val    = float(metrics.get("height",      height))
+            weight_val    = float(metrics.get("weight",      weight))
+            systolic_val  = float(metrics.get("systolic",    systolic))
+            diastolic_val = float(metrics.get("diastolic",   diastolic))
+            chol_val      = float(metrics.get("cholesterol", cholesterol))
+            gluc_val2     = float(metrics.get("glucose",     glucose))
+            smoke_val     = float(metrics.get("smoke",       smoke))
+            alc_val       = float(metrics.get("alcohol",     alcohol))
+            act_val       = float(metrics.get("active",      active))
 
             features = [age_val, gender_val, height_val, weight_val,
                         systolic_val, diastolic_val, chol_val, gluc_val2,
@@ -307,14 +253,14 @@ def main():
 
         # ── BP / HYPERTENSION ──────────────────────────────────────────────────
         elif model_type == "bp":
-            age_val         = float(metrics.get("age",            metrics.get("Age",            float(age))))
-            salt            = float(metrics.get("salt_intake",    metrics.get("Salt_Intake",    3.0)))
-            stress          = float(metrics.get("stress_score",   metrics.get("Stress_Score",   4.0)))
-            bp_hist_val     = float(metrics.get("bp_history",     metrics.get("BP_History",     0.0)))
-            sleep           = float(metrics.get("sleep_duration", metrics.get("Sleep_Duration", 7.0)))
-            fam_hist_val    = float(metrics.get("family_history", metrics.get("Family_History", 0.0)))
-            ex_lvl_val      = float(metrics.get("exercise_level", metrics.get("Exercise_Level", float(active))))
-            smoke_status_val= float(metrics.get("smoking_status", metrics.get("Smoking_Status", float(smoke))))
+            age_val          = float(metrics.get("age",            metrics.get("Age",            float(age))))
+            salt             = float(metrics.get("salt_intake",    metrics.get("Salt_Intake",    3.0)))
+            stress           = float(metrics.get("stress_score",   metrics.get("Stress_Score",   4.0)))
+            bp_hist_val      = float(metrics.get("bp_history",     metrics.get("BP_History",     0.0)))
+            sleep            = float(metrics.get("sleep_duration", metrics.get("Sleep_Duration", 7.0)))
+            fam_hist_val     = float(metrics.get("family_history", metrics.get("Family_History", 0.0)))
+            ex_lvl_val       = float(metrics.get("exercise_level", metrics.get("Exercise_Level", float(active))))
+            smoke_status_val = float(metrics.get("smoking_status", metrics.get("Smoking_Status", float(smoke))))
 
             features = [age_val, salt, stress, bp_hist_val, sleep,
                         fam_hist_val, ex_lvl_val, smoke_status_val]
@@ -344,13 +290,13 @@ def main():
 
         # ── KIDNEY ─────────────────────────────────────────────────────────────
         else:  # model_type == "kidney"
-            age_val  = float(metrics.get("age",              metrics.get("Age",              float(age))))
-            creat    = float(metrics.get("creatinine_level", metrics.get("Creatinine_Level", 1.15)))
-            bun_val  = float(metrics.get("bun",              metrics.get("BUN",              17.5)))
-            diab_val = float(metrics.get("diabetes",         metrics.get("Diabetes",         1.0 if (glucose_val >= 126 or get_bool_field(profile, metrics, "diabetes_history")) else 0.0)))
-            ht_val   = float(metrics.get("hypertension",     metrics.get("Hypertension",     1.0 if (systolic >= 130 or diastolic >= 80 or get_bool_field(profile, metrics, "hypertension_history")) else 0.0)))
-            gfr_val  = float(metrics.get("gfr",              metrics.get("GFR",              82.0)))
-            urine_val= float(metrics.get("urine_output",     metrics.get("Urine_Output",     1.6)))
+            age_val   = float(metrics.get("age",              metrics.get("Age",              float(age))))
+            creat     = float(metrics.get("creatinine_level", metrics.get("Creatinine_Level", 1.15)))
+            bun_val   = float(metrics.get("bun",              metrics.get("BUN",              17.5)))
+            diab_val  = float(metrics.get("diabetes",         metrics.get("Diabetes",         1.0 if (glucose_val >= 126 or get_bool_field(profile, metrics, "diabetes_history")) else 0.0)))
+            ht_val    = float(metrics.get("hypertension",     metrics.get("Hypertension",     1.0 if (systolic >= 130 or diastolic >= 80 or get_bool_field(profile, metrics, "hypertension_history")) else 0.0)))
+            gfr_val   = float(metrics.get("gfr",              metrics.get("GFR",              82.0)))
+            urine_val = float(metrics.get("urine_output",     metrics.get("Urine_Output",     1.6)))
 
             features = [age_val, creat, bun_val, diab_val, ht_val, gfr_val, urine_val]
 
